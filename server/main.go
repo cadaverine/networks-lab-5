@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Server response")
-}
-
 func serve(ip string) {
 	log.Fatal(http.ListenAndServe(ip, nil))
 }
@@ -26,12 +22,12 @@ func main() {
 		host = os.Args[1]
 	}
 
-	ipAddress := host + ":" + port
+	ip := host + ":" + port
 
-	http.HandleFunc("/", handler)
+	http.Handle("/", http.FileServer(http.Dir("static")))
 
-	go serve(ipAddress)
+	go serve(ip)
 
-	fmt.Println("Server listening on " + ipAddress)
+	fmt.Println("Server listening on " + ip)
 	fmt.Scanln()
 }
